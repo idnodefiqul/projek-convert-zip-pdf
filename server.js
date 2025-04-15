@@ -1,3 +1,10 @@
+/**
+ * Copyright (C) 2025 Node fiqul.
+ *
+ * Proyek ini dilindungi oleh lisensi hak milik.
+ * Tidak boleh disalin, digunakan, atau dimodifikasi tanpa izin.
+ */
+
 const express = require('express');
 const multer = require('multer');
 const fs = require('fs');
