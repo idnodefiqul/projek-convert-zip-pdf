@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conversion Successful</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="bg-gradient-to-br from-purple-600 via-blue-500 to-teal-400 min-h-screen flex items-center justify-center">
+  <div class="bg-white bg-opacity-90 p-8 rounded-2xl shadow-2xl max-w-md w-full text-center">
+    <h1 class="text-2xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-yellow-500">Conversion Successful!</h1>
+    <p class="mb-4 text-gray-600">Your PDF has been generated.</p>
+    <a href="<%= pdfUrl %>" download class="inline-block bg-gradient-to-r from-green-400 to-teal-500 text-white p-2 rounded-lg hover:from-green-500 hover:to-teal-600">Download PDF</a>
+    <p class="mt-4"><a href="/" class="text-blue-500 hover:underline">Convert another file</a></p>
+  </div>
+</body>
+</html>
