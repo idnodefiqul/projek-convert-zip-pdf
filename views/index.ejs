@@ -6,43 +6,442 @@
   <title>ZIP to PDF Converter</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap');
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+      background-size: 400% 400%;
+      animation: gradient 15s ease infinite;
+    }
+    
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    .glass-card {
+      backdrop-filter: blur(16px) saturate(180%);
+      background-color: rgba(255, 255, 255, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    }
+    
+    .file-drop-area {
+      border: 3px dashed #a78bfa;
+      border-radius: 15px;
+      transition: all 0.3s ease;
+    }
+    
+    .file-drop-area:hover {
+      border-color: #8b5cf6;
+      transform: scale(1.02);
+    }
+    
+    .fancy-button {
+      background-size: 200% auto;
+      box-shadow: 0 4px 15px 0 rgba(116, 79, 168, 0.75);
+      transition: all 0.3s ease;
+    }
+    
+    .fancy-button:hover {
+      background-position: right center;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px 0 rgba(116, 79, 168, 0.8);
+    }
+    
+    .floating {
+      animation: floating 3s ease-in-out infinite;
+    }
+    
+    @keyframes floating {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-15px); }
+      100% { transform: translateY(0px); }
+    }
+    
+    .pulse-ring {
+      position: relative;
+    }
+    
+    .pulse-ring:before {
+      content: '';
+      position: absolute;
+      top: -8px;
+      left: -8px;
+      right: -8px;
+      bottom: -8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+      animation: pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+    }
+    
+    @keyframes pulse-ring {
+      0% { transform: scale(0.8); opacity: 0.8; }
+      50% { transform: scale(1.2); opacity: 0; }
+      100% { transform: scale(0.8); opacity: 0; }
+    }
+    
+    .sparkle {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .sparkle:after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0) 100%);
+      transform: rotate(30deg);
+      animation: sparkle-effect 6s ease-in-out infinite;
+    }
+    
+    @keyframes sparkle-effect {
+      0% { transform: rotate(30deg) translateX(-100%); }
+      30%, 100% { transform: rotate(30deg) translateX(100%); }
+    }
+    
+    /* Success notification styling */
+    .success-card {
+      background: linear-gradient(135deg, #ff9cf5 0%, #ff71c8 100%);
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 15px 35px rgba(226, 75, 167, 0.25);
+      position: relative;
+      z-index: 10;
+    }
+    
+    .success-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 70%);
+      z-index: -1;
+    }
+    
+    .success-icon {
+      width: 120px;
+      height: 120px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 30px;
+      position: relative;
+    }
+    
+    .success-icon::after {
+      content: '';
+      position: absolute;
+      width: 90px;
+      height: 90px;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 50%;
+    }
+    
+    .success-icon svg {
+      width: 50px;
+      height: 50px;
+      color: white;
+      z-index: 2;
+    }
+    
+    .success-title {
+      font-size: 40px;
+      font-weight: 800;
+      color: white;
+      text-align: center;
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+    
+    .success-message {
+      font-size: 20px;
+      color: rgba(255, 255, 255, 0.9);
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    
+    .download-button {
+      background: rgba(255, 255, 255, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      border-radius: 16px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 24px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    
+    .download-button:hover {
+      background: rgba(255, 255, 255, 0.35);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .download-button svg {
+      margin-right: 12px;
+    }
+    
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.6;
+      z-index: -1;
+      animation: blob-float 10s ease-in-out infinite alternate;
+    }
+    
+    .blob-1 {
+      width: 300px;
+      height: 300px;
+      background: linear-gradient(90deg, #f9c5d1, #f687b3);
+      top: -100px;
+      left: -50px;
+    }
+    
+    .blob-2 {
+      width: 250px;
+      height: 250px;
+      background: linear-gradient(90deg, #b8c6db, #f5b8d1);
+      bottom: -80px;
+      right: -30px;
+    }
+    
+    @keyframes blob-float {
+      0% {
+        transform: translate(0, 0) scale(1);
+      }
+      50% {
+        transform: translate(20px, 20px) scale(1.1);
+      }
+      100% {
+        transform: translate(-20px, 10px) scale(0.9);
+      }
+    }
+    
+    .success-glow {
+      animation: success-pulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes success-pulse {
+      0%, 100% {
+        box-shadow: 0 0 30px rgba(255, 156, 245, 0.6);
+      }
+      50% {
+        box-shadow: 0 0 60px rgba(255, 113, 200, 0.8);
+      }
+    }
+  </style>
 </head>
-<body class="bg-gradient-to-br from-purple-600 via-blue-500 to-teal-400 min-h-screen flex items-center justify-center">
-  <div class="bg-white bg-opacity-90 p-8 rounded-2xl shadow-2xl max-w-lg w-full transform hover:scale-105 transition-transform duration-300">
-    <h1 class="text-4xl font-extrabold text-center mb-6 text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-yellow-500">ZIP to PDF Converter</h1>
-    <p class="text-center text-gray-600 mb-6">Convert your images to stunning PDFs with ease!</p>
-    <form id="uploadForm" enctype="multipart/form-data" class="space-y-6">
-      <div>
-        <label class="block text-gray-700 font-semibold mb-2" for="zipFile">Upload ZIP File (Max 500MB)</label>
-        <input type="file" name="zipFile" id="zipFile" accept=".zip" class="w-full p-3 border-2 border-purple-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors" required>
+<body class="min-h-screen flex items-center justify-center p-4">
+  <div class="fixed top-0 left-0 w-full h-full pointer-events-none overflow-hidden z-0">
+    <div class="absolute h-20 w-20 rounded-full bg-purple-500 opacity-20 animate-pulse" style="top: 10%; left: 20%;"></div>
+    <div class="absolute h-32 w-32 rounded-full bg-pink-500 opacity-10 animate-pulse-slow" style="top: 30%; left: 70%;"></div>
+    <div class="absolute h-24 w-24 rounded-full bg-blue-500 opacity-15 animate-pulse" style="top: 70%; left: 15%;"></div>
+    <div class="absolute h-16 w-16 rounded-full bg-yellow-500 opacity-20 animate-pulse-slow" style="top: 60%; left: 80%;"></div>
+    <div class="absolute h-28 w-28 rounded-full bg-green-500 opacity-10 animate-pulse" style="top: 85%; left: 45%;"></div>
+  </div>
+
+  <div class="glass-card p-8 rounded-3xl max-w-lg w-full z-10 transform hover:scale-102 transition-all duration-300 animate__animated animate__fadeIn">
+    <div class="flex justify-center mb-6">
+      <div class="relative floating">
+        <div class="h-20 w-20 rounded-full bg-gradient-to-r from-purple-600 to-blue-500 flex items-center justify-center">
+          <svg class="h-10 w-10 text-white" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"></path>
+            <path d="M10 9l-1-1v3m0 0l-1-1h6m-6 1l-1 1" stroke="white" stroke-width="1" fill="none"></path>
+          </svg>
+        </div>
+        <div class="absolute -top-1 -right-1 h-6 w-6 rounded-full bg-pink-500 flex items-center justify-center text-white text-xs font-bold border-2 border-white">
+          <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+          </svg>
+        </div>
       </div>
-      <div>
-        <label class="block text-gray-700 font-semibold mb-2" for="quality">Select Quality</label>
-        <select name="quality" id="quality" class="w-full p-3 border-2 border-purple-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors">
-          <option value="medium">Medium (100 DPI)</option>
-          <option value="hd" selected>HD (150 DPI)</option>
-          <option value="fullhd">Full HD (300 DPI)</option>
-        </select>
-      </div>
-      <button type="submit" class="w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white p-3 rounded-lg hover:from-pink-600 hover:to-purple-700 font-semibold transition-all duration-300">Convert to PDF</button>
-    </form>
-    <div id="loading" class="hidden mt-6 text-center">
-      <svg class="animate-spin h-8 w-8 mx-auto text-blue-500" viewBox="0 0 24 24">
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8h8a8 8 0 01-8 8 8 8 0 01-8-8z"></path>
-      </svg>
-      <p class="text-gray-700 mt-2">Converting... You can close the tab, we'll notify you!</p>
     </div>
-    <div id="notification" class="hidden mt-6 p-4 bg-gradient-to-r from-green-400 to-teal-500 rounded-lg text-white text-center">
-      <div class="flex justify-center mb-2">
-        <svg class="h-12 w-12 animate-bounce" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="white"/>
-        </svg>
+    
+    <h1 class="text-4xl font-extrabold text-center mb-2 sparkle">
+      <span class="bg-clip-text text-transparent bg-gradient-to-r from-purple-600 via-pink-500 to-orange-400">ZIP to PDF Converter</span>
+    </h1>
+    
+    <p class="text-center text-gray-600 mb-8 animate__animated animate__fadeIn animate__delay-1s">Convert your images to stunning PDFs with just one click!</p>
+    
+    <form id="uploadForm" enctype="multipart/form-data" class="space-y-6">
+      <div class="animate__animated animate__fadeInUp animate__delay-1s">
+        <label class="block text-gray-700 font-semibold mb-2 flex items-center gap-2" for="zipFile">
+          <svg class="h-5 w-5 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+          </svg>
+          Upload ZIP File (Max 500MB)
+        </label>
+        <div class="file-drop-area p-8 bg-purple-50 flex flex-col items-center justify-center text-center cursor-pointer">
+          <svg class="h-12 w-12 text-purple-500 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+          </svg>
+          <p class="text-sm text-purple-700 font-medium">Drag & drop files here or click to browse</p>
+          <p class="text-xs text-gray-500 mt-1">Supports ZIP files containing images</p>
+          <input type="file" name="zipFile" id="zipFile" accept=".zip" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" required>
+        </div>
       </div>
-      <p class="font-semibold">Awesome! Your PDF is ready!</p>
-      <a id="downloadLink" href="#" download class="inline-block mt-2 bg-white text-teal-600 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Download Now</a>
+      
+      <div class="animate__animated animate__fadeInUp animate__delay-2s">
+        <label class="block text-gray-700 font-semibold mb-2 flex items-center gap-2" for="quality">
+          <svg class="h-5 w-5 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"></path>
+          </svg>
+          Select Quality
+        </label>
+        <div class="relative">
+          <select name="quality" id="quality" class="w-full p-4 pl-5 pr-10 border-2 border-purple-300 rounded-xl bg-white focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-colors appearance-none">
+            <option value="medium">Medium (100 DPI)</option>
+            <option value="hd" selected>HD (150 DPI)</option>
+            <option value="fullhd">Full HD (300 DPI)</option>
+          </select>
+          <div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none">
+            <svg class="h-5 w-5 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+      
+      <button type="submit" class="w-full p-4 rounded-xl font-bold text-white text-lg fancy-button bg-gradient-to-r from-purple-600 via-pink-500 to-orange-400 animate__animated animate__fadeInUp animate__delay-3s flex items-center justify-center gap-2">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+        </svg>
+        Convert to PDF
+      </button>
+    </form>
+    
+    <div id="loading" class="hidden mt-8 p-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-purple-100">
+      <div class="flex items-center justify-center space-x-4">
+        <div class="relative">
+          <div class="pulse-ring">
+            <div class="h-12 w-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-600"></div>
+          </div>
+        </div>
+        <div>
+          <p class="text-lg font-semibold text-purple-800">Magic in progress...</p>
+          <p class="text-sm text-gray-600">You can close the tab, we'll notify you!</p>
+        </div>
+      </div>
+      <div class="w-full mt-4 bg-gray-200 rounded-full h-2">
+        <div class="h-2 rounded-full bg-gradient-to-r from-purple-600 to-pink-500" style="width: 0%"></div>
+      </div>
+    </div>
+    
+    <!-- New and improved success notification that matches the image you shared -->
+    <div id="notification" class="hidden mt-8 animate__animated animate__fadeIn">
+      <div class="success-card relative p-8 pt-10 pb-10 success-glow">
+        <!-- Decorative blobs -->
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        
+        <!-- Success icon -->
+        <div class="success-icon animate__animated animate__bounceIn">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        
+        <!-- Text content -->
+        <h2 class="success-title animate__animated animate__fadeInUp">
+          Awesome! Your PDF<br>is ready!
+        </h2>
+        
+        <p class="success-message animate__animated animate__fadeInUp animate__delay-1s">
+          Your images have been perfectly converted to PDF format.
+        </p>
+        
+        <!-- Download button -->
+        <a id="downloadLink" href="#" download class="download-button animate__animated animate__fadeInUp animate__delay-2s">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+          </svg>
+          Download Now
+        </a>
+      </div>
     </div>
   </div>
+
   <script src="/js/main.js"></script>
+  <script>
+    // Animate progress bar for loading state
+    document.getElementById('uploadForm').addEventListener('submit', function(e) {
+      const loadingDiv = document.getElementById('loading');
+      const progressBar = loadingDiv.querySelector('.h-2');
+      
+      if (loadingDiv.classList.contains('hidden')) {
+        setTimeout(() => {
+          progressBar.style.width = '0%';
+          progressBar.style.transition = 'width 0.1s ease';
+          setTimeout(() => {
+            progressBar.style.width = '30%';
+            setTimeout(() => {
+              progressBar.style.width = '60%';
+              setTimeout(() => {
+                progressBar.style.width = '85%';
+              }, 1500);
+            }, 1000);
+          }, 100);
+        }, 500);
+      }
+    });
+    
+    // Make the drag and drop area functional
+    const fileInput = document.getElementById('zipFile');
+    const dropArea = fileInput.parentElement;
+    
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      dropArea.addEventListener(eventName, preventDefaults, false);
+    });
+    
+    function preventDefaults(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dropArea.addEventListener(eventName, highlight, false);
+    });
+    
+    ['dragleave', 'drop'].forEach(eventName => {
+      dropArea.addEventListener(eventName, unhighlight, false);
+    });
+    
+    function highlight() {
+      dropArea.classList.add('bg-purple-100');
+      dropArea.classList.add('border-purple-500');
+    }
+    
+    function unhighlight() {
+      dropArea.classList.remove('bg-purple-100');
+      dropArea.classList.remove('border-purple-500');
+    }
+    
+    dropArea.addEventListener('drop', handleDrop, false);
+    
+    function handleDrop(e) {
+      const dt = e.dataTransfer;
+      const files = dt.files;
+      fileInput.files = files;
+    }
+  </script>
 </body>
 </html>
